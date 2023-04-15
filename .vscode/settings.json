@@ -1,0 +1,46 @@
+{
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "readability-identifier-length",
+        "readability-implicit-bool-conversion",
+        "hicpp-signed-bitwise",
+        "cppcoreguidelines-avoid-magic-numbers",
+        "readability-magic-numbers",
+        "cppcoreguidelines-init-variables",
+        "cppcoreguidelines-init-variables",
+        "readability-isolate-declaration",
+        "cppcoreguidelines-pro-bounds-array-to-pointer-decay",
+        "cppcoreguidelines-pro-bounds-pointer-arithmetic",
+        "cppcoreguidelines-pro-bounds-constant-array-index",
+        "cppcoreguidelines-avoid-c-arrays",
+        "hicpp-no-array-decay",
+        "cppcoreguidelines-avoid-c-arrays",
+        "hicpp-avoid-c-arrays",
+        "bugprone-easily-swappable-parameters",
+        "cppcoreguidelines-macro-usage"
+    ],
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "googletest.failed",
+                "settings": {
+                    "foreground": "#f00"
+                }
+            },
+            {
+                "scope": "googletest.passed",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            },
+            {
+                "scope": "googletest.run",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            }
+        ]
+    }
+}
