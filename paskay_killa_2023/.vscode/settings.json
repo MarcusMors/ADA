@@ -2,11 +2,7 @@
     "files.associations": {
         "iostream": "cpp",
         "ostream": "cpp",
-        "map": "cpp",
-        "iosfwd": "cpp",
-        "type_traits": "cpp",
-        "ranges": "cpp",
-        "vector": "cpp"
+        "array": "cpp"
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "readability-identifier-length",

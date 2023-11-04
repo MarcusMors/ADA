@@ -36,7 +36,7 @@ template<class OutStreamType = std::ostream> void print_sinoidal_random_data(Out
   using Seed = std::random_device;
   using Engine = std::mt19937;
   using Distribution = std::normal_distribution<double>;
-  using Distribution_sign = std::normal_distribution<int>;
+  // using Distribution_sign = std::normal_distribution<int>;
 
   Seed seed;
   Engine engine(seed());
@@ -73,23 +73,29 @@ template<class OutStreamType = std::ostream> void print_random_data(OutStreamTyp
    * n_max = 10^5 = 100'000
    * i_max = 10^9 = 1'000'000
    */
-  const intType n_max = 50;
-  const intType n_min = 30;
+  const intType n_max = 5;
+  const intType n_min = 3;
   Distribution n_distribution(n_min, n_max);
   auto generate_n = [&]() { return n_distribution(engine); };
 
-  const intType i_max = 25;
-  const intType i_min = -25;
+  const intType x_max = 100 * (n_max - 2);
+  const intType x_min = 0;
+  Distribution x_distribution(x_min, x_max);
+  auto generate_x = [&]() { return x_distribution(engine); };
+
+  const intType i_max = 100;
+  const intType i_min = 0;
   Distribution i_distribution(i_min, i_max);
   auto generate_i = [&]() { return i_distribution(engine); };
 
   // cout << data_size << ",";
 
   using std::endl;
-  out_stream << 1 << endl;
+  // out_stream << 1 << endl;
   const intType data_size = generate_n();
-  out_stream << data_size << endl;
-  for (intType i = 0; i < data_size; i++) { out_stream << generate_i() << ' '; }
+  out_stream << data_size << " " << generate_x() << endl;
+  for (intType i = 0; i < data_size - 1; i++) { out_stream << generate_i() << ' '; }
+
   out_stream << endl;
 }
 
@@ -101,7 +107,7 @@ int main()
   // std::ofstream out{ "" };
   // print_random_data(out);
 
-  print_sinoidal_random_data(cout);
+  print_random_data(cout);
 
   return 0;
 }
