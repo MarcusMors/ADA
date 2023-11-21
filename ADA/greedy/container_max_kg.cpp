@@ -46,18 +46,24 @@ int DFS(vi c, int kg, int l, vi &path)
   int best_w_until_now = kg;
   vi best_path_until_now{ path };
 
-  for (int i = c.size() - 1; i != -1U; i--) {
-    // filter c
+  vi filtered{};
+  for (int i = 0; i < c.size(); i++) {
     if (kg + c[i] > l) { continue; }
+    filtered.push_back(c[i]);
+  }
 
-    vi n_c{ c };
-    swap(n_c[i], n_c.back());
 
+  for (int i = filtered.size() - 1; i != -1U; i--) {
+    // filter filtered
+    vi n_c{ filtered };
+    n_c[i] = n_c.back();
+    // swap(n_c[i], n_c.back());
     n_c.pop_back();
 
     vi n_path{ path };
-    n_path.pb(c[i]);
-    int n_kg = DFS(c, kg + c[i], l, n_path);
+    n_path.pb(filtered[i]);
+    int n_kg = DFS(filtered, kg + filtered[i], l, n_path);
+
     if (n_kg > best_w_until_now) {
       best_w_until_now = n_kg;
       best_path_until_now = n_path;
@@ -98,12 +104,14 @@ void solve()
 /*
 15 35
 9 1 10 7 4 9 1 10 8 9 2 4 2 7 8
+
+8 25
+7 4 9 1 10 8 9 2
  */
 
 /*
 4 30
 3 7 8 20
-
 */
 
 signed main()
