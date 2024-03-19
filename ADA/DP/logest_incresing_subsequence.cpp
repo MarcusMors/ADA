@@ -37,90 +37,91 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   for (auto &&e : v) { os << e << " "; }
   return os;
 }
+template<class It> void print(It it, int n) { print(it, it + n); }
+template<class T> void print(vector<T> v, int n) { print(v.begin(), v.begin() + n); }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
+
+template<class It> void fill(It it, int n)
+{
+  It limit = it + n;
+  auto val = *it;
+  if (n == 0) { return; }
+  cin >> val;
+  *it = val;
+  ++it;
+
+  while (it != limit) {
+    char coma;
+    cin >> coma;
+    cin >> val;
+    *it = val;
+    ++it;
+  }
+}
 
 void solve()
 {
   int n;
   cin >> n;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
-
-  int reduce = 0;
+  vii v(n);
 
   rep(i, 0, n)
   {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
+    int e;
+    cin >> e;
+    v[i] = { e, i };
   }
+  sort(all(v));
+  vector<pair<int, vi>> DP(n);
+  DP[0].first = v[0].second;
+  DP[0].second.pb(v[0].first);
 
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
+  for (int i = 1; i < n; i++) {
+    int index = 0;
+    int max_size = 0;
+    bool found = false;
+    for (int j = i - 1; j >= 0; j--) {
+      if (v[i].second > DP[j].first and DP[j].second.size() > max_size) {
+        found = true;
+        index = j;
+        max_size = DP[j].second.size();
       }
     }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
+    if (found) { DP[i].second = DP[index].second; }
+    DP[i].second.pb(v[i].first);
+    DP[i].first = v[i].second;
   }
 
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
+  int max_sz = 0;
+  int i_max_sz = 0;
+  int i = 0;
+  for (auto &&[index, vec] : DP) {
+    if (vec.size() > max_sz) {
+      i_max_sz = i;
+      max_sz = vec.size();
+    }
+    i++;
   }
 
-  cout << max << "\n";
+  cout << "rpta: " << DP[i_max_sz].second << "\n";
 }
 
 /*
-3
-2 7 8
-8 7 2
-7 5 5
+input:
+5
+3 10 2 1 20
+6
+50 3 10 7 40 80
+output:
+3 10 20
+3 7 40 80
+
  */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
   solve();
 

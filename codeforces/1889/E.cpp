@@ -38,91 +38,55 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
-
 void solve()
 {
   int n;
   cin >> n;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
 
-  int reduce = 0;
-
+  vi v(n);
+  int min = 100'000;
+  int min_i = -1;
   rep(i, 0, n)
   {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
+    cin >> v[i];
+    if (v[i] < min) {
+      min = v[i];
+      min_i = i;
     }
-
-    bears.push_back({ x, { y, p } });
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
+  if (is_sorted(all(v))) {// it is sorted
+    cout << "0\n";
     return;
   }
 
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
+  vi copy = v;
+  sort(all(copy));
+  // two repeated numbers that are not the maximum
+  int max = copy.back();
 
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
 
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
-      }
+  for (int i = 0; i < n - 1; i++) {
+    if ((copy[i] or copy[i + 1] != max) and copy[i] == copy[i + 1]) {// there is something between them
+      cout << "-1\n";
+      return;
     }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
   }
 
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
-
-  cout << max << "\n";
+  //
+  cout << min_i << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
-  solve();
+  int t;
+  cin >> t;
+
+  while (t--) { solve(); }
+  // solve();
 
   return 0;
 }

@@ -38,91 +38,86 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
+// vi v{};
+vi v(200000);
 
 void solve()
 {
   int n;
   cin >> n;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
+  int p = 1;
 
-  int reduce = 0;
+  v.resize(n);
 
-  rep(i, 0, n)
-  {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
+  rep(i, 0, n) { cin >> v[i]; }
 
-    bears.push_back({ x, { y, p } });
+  vi ks{};
+  for (int k = 2; k <= n / 2; k++) {
+    if (n % k == 0) { ks.pb(k); }
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
+  for (auto &&k : ks) {
+    for (int i = 0; i < k; i++) {
+      //  0, k , 2k ... n/k - k
+      int gcd = __gcd(v[0], v[k]);
+      for (int j = k; j < n; j += k) {
+        // i + j
+        gcd = __gcd(gcd, v[i + j] == 0 ? gcd : v[i + j]);
       }
+
+      if (gcd != 1) { p++; }
     }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
   }
 
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
 
-  cout << max << "\n";
+  cout << p << "\n";
+  // if next is 0, it counts as the max gcd
+
+  //
+
+  //
 }
 
 /*
+
+8
+4
+1 2 1 4
 3
-2 7 8
-8 7 2
-7 5 5
+1 2 3
+5
+1 1 1 1 1
+6
+1 3 1 1 3 1
+6
+6 2 6 2 2 2
+6
+2 6 3 6 6 6
+10
+1 7 5 1 4 3 1 3 1 4
+1
+1
+
+
+
+
+
  */
 
 signed main()
 {
-  // fastio();
+  // v.reserve()
+  // v.resize()
+  fastio();
 
-  solve();
+  int t;
+  cin >> t;
+
+  while (t--) {
+    solve();
+    v.clear();
+  }
 
   return 0;
 }

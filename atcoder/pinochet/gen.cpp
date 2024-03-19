@@ -51,26 +51,25 @@ void print_random_data()
    * n_max = 3;
    */
 
-  cint_t n_max = 3;
-  cint_t n_min = 1;
+  // cint_t n_max = 10;
+  cint_t n_max = 100'000;
+  cint_t n_min = 90'000;
+  // cint_t n_min = 1;
   Distribution n_distribution(n_min, n_max);
   auto gen_n = [&]() { return n_distribution(engine); };
 
-  cint_t xp_max = 9;
-  cint_t xp_min = 1;
-  Distribution xp_distribution(xp_min, xp_max);
-  auto gen_xp = [&]() { return xp_distribution(engine); };
-  cint_t y_max = 9;
-  cint_t y_min = 0;
-  Distribution y_distribution(y_min, y_max);
-  auto gen_y = [&]() { return y_distribution(engine); };
+  cint_t digit_max = 9;
+  cint_t digit_min = 0;
+  Distribution digit_distribution(digit_min, digit_max);
+  auto gen_digit = [&]() { return digit_distribution(engine); };
 
   using std::cout;
   using std::endl;
 
   cint_t data_size = gen_n();
-  cout << data_size << "\n";
-  for (int_t i = 0; i < data_size; i++) { cout << gen_xp() << " " << gen_y() << " " << gen_xp() << "\n"; }
+
+  // cout << data_size << "\n";
+  for (int_t i = 0; i < data_size; i++) { cout << gen_digit(); }
   cout << "\n";
 }
 

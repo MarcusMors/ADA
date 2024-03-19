@@ -13,7 +13,7 @@
 // __builtin_popcount(x) // returns number of 1-bits of x. x is unsigned int
 // __builtin_popcount(14) = 3// because 14: "1110", has three 1-bits.
 
-// #define int long long
+#define int long long
 #define rep(i, begin, end) \
   for (__typeof(end) i = (begin) - ((begin) > (end)); i != (end) - ((begin) > (end)); i += 1 - 2 * ((begin) > (end)))
 #define pb push_back
@@ -38,91 +38,82 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
-
 void solve()
 {
   int n;
   cin >> n;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
-
-  int reduce = 0;
+  // x >= 1
+  int const upper_null = 1'000'000'000'0;
+  int type_1{ -1 };
+  int type_2{ upper_null };
+  set<int> type_3{};
 
   rep(i, 0, n)
   {
+    int type;
+    cin >> type;
     int x;
     cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
+    switch (type) {
+    case 1:// k >= x
+      if (x > type_1) { type_1 = x; }
+      break;
+    case 2:// k <= x
+      if (x < type_2) { type_2 = x; }
+      break;
+    case 3:// k != x
+      type_3.insert(x);
+      break;
     }
-
-    bears.push_back({ x, { y, p } });
+    //
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
+  // cout << "type_1: " << type_1 << "\n";
+  // cout << "type_2: " << type_2 << "\n";
+  int count = count_if(all(type_3), [&](int e) { return e >= type_1 && e <= type_2; });
+  // cout << "count: " << count << "\n";
+  if (type_1 > type_2) {
+    cout << "0\n";
     return;
   }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
-      }
-    }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
-  }
-
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
-
-  cout << max << "\n";
+  const int rpta = (type_2 - type_1) + 1 - count;
+  cout << rpta << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
-  solve();
+  int t;
+  cin >> t;
 
+  while (t--) { solve(); }
+  // solve();
   return 0;
 }
+
+/*
+4
+1 3
+2 10
+3 1
+3 5
+out:
+7
+ */
+
+/*
+x <= 10^9
+
+4
+k >= 3
+k <= 10
+k != 1
+k != 5
+
+3,4,5,6,7,8,9,10
+3,4,6,7,8,9,10
+
+rpta = 7
+*/

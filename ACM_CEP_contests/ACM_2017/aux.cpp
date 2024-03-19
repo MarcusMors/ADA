@@ -6,63 +6,39 @@ using namespace std;
 
 int main()
 {
-  // Create a sorted vector
-  //                       0  1  2  3  4  5  6  7
+  vector<int> v = { 1, 2, 4, 4, 4, 5, 7, 9 };
 
-  string str1 = "hokt0ktojuy5gr5sgoj5iglk";
-  string str2 = "bienvenidos al maid cafe";
-
-  cout << str1.size() << endl;
-  cout << str2.size() << endl;
-
-  vector<int> vec = { 1, 2, 4, 4, 4, 5, 7, 9 };
-
-  int target = 4;
-  auto lower = lower_bound(vec.begin(), vec.end(), target);
-  auto upper = upper_bound(vec.begin(), vec.end(), target);
-
-  int i = 0;
-  cout << "Vector: ";
-  for (const auto &element : vec) { cout << i++ << " "; }
+  cout << "i: ";
+  for (size_t i = 0; i < v.size(); i++) { cout << i << " "; }
   cout << endl;
-  cout << "Vector: ";
-  for (const auto &element : vec) { cout << element << " "; }
-  cout << "\n";
 
-  cout << "Lower bound of " << target << ": " << *lower << " at index " << (lower - vec.begin()) << "\n";
-  cout << "Upper bound of " << target << ": " << *upper << " at index " << (upper - vec.begin()) << "\n";
+  cout << "v: ";
+  for (auto &&e : v) { cout << e << " "; }
+  cout << endl;
 
 
-  target = 0;
-  lower = lower_bound(vec.begin(), vec.end(), target);
-  upper = upper_bound(vec.begin(), vec.end(), target);
+  int x = 4;
+  auto l = lower_bound(v.begin(), v.end(), x);
+  auto u = upper_bound(v.begin(), v.end(), x);
 
-  if (lower == vec.end()) {
-    cout << "lower not found" << endl;
+  cout << "Lower de " << x << ": " << *l << " en [" << (l - v.begin()) << "]" << endl;
+  cout << "Upper de " << x << ": " << *u << " en [" << (u - v.begin()) << "]" << endl;
+
+
+  x = 100;
+  l = lower_bound(v.begin(), v.end(), x);
+  u = upper_bound(v.begin(), v.end(), x);
+
+  if (l == v.end()) {// l es v.end() cuando no lo encuentra
+    cout << "Lower no encontrado" << endl;
   } else {
-    cout << "Lower bound of " << target << ": " << *lower << " at index " << (lower - vec.begin()) << "\n";
+    cout << "Lower de " << x << ": " << *l << " en [" << (l - v.begin()) << "]" << endl;
   }
 
-  if (upper == vec.end()) {
-    cout << "upper not found" << endl;
+  if (u == v.end()) {// u es v.end() cuando no lo encuentra
+    cout << "Upper no encontrado" << endl;
   } else {
-    cout << "Upper bound of " << target << ": " << *upper << " at index " << (upper - vec.begin()) << "\n";
-  }
-
-  target = 1;
-  lower = lower_bound(vec.begin(), vec.end(), target);
-  upper = upper_bound(vec.begin(), vec.end(), target);
-
-  if (lower == vec.end()) {
-    cout << "lower not found" << endl;
-  } else {
-    cout << "Lower bound of " << target << ": " << *lower << " at index " << (lower - vec.begin()) << "\n";
-  }
-
-  if (upper == vec.end()) {
-    cout << "upper not found" << endl;
-  } else {
-    cout << "Upper bound of " << target << ": " << *upper << " at index " << (upper - vec.begin()) << "\n";
+    cout << "Upper de " << x << ": " << *u << " en [" << (u - v.begin()) << "]" << endl;
   }
 
   return 0;

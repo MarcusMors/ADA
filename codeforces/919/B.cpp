@@ -18,6 +18,7 @@
   for (__typeof(end) i = (begin) - ((begin) > (end)); i != (end) - ((begin) > (end)); i += 1 - 2 * ((begin) > (end)))
 #define pb push_back
 #define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
 // #define type typename
 
 using namespace std;
@@ -38,91 +39,67 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
+vector<int> v;
 
 void solve()
 {
   int n;
   cin >> n;
+  int a_m;
+  cin >> a_m;
+  int b_m;
+  cin >> b_m;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
+  v.resize(n);
 
-  int reduce = 0;
-
+  int sum = 0;
   rep(i, 0, n)
   {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
+    cin >> v[i];
+    sum += v[i];
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
+  sort(rall(v));
+  // cout << v << "\n";
+  // alice might or not delete
+  // bob always deletes
 
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
+  int bob_sub = 0;
+  for (int i = 0; i < b_m; i++) { bob_sub += v[i]; }
+
+  int greatest_sum = sum - 2 * bob_sub;
+  // cout << "greatest_sum: " << greatest_sum << "\n";
+  // cout << "sum: " << sum << "\n";
+  // cout << "bob_sum: " << bob_sub << "\n";
+  for (int i = 1; i <= a_m; i++) {
+    sum -= v[i - 1];
+    bob_sub -= v[i - 1];
+    // cout << "added to bob: " << (((b_m - 1 + i) < v.size()) ? v[b_m + i - 1] : 0) << "\n";
+    bob_sub += ((b_m - 1 + i) < v.size()) ? v[b_m + i - 1] : 0;
+    // cout << "sum: " << sum << "\n";
+    // cout << "bob_sum: " << bob_sub << "\n";
+    const int c_sum = sum - (2 * bob_sub);
+    if (c_sum > greatest_sum) { greatest_sum = c_sum; }
+    // cout << "greatest_sum: " << greatest_sum << "\n";
+    // else {
+    //   cout << "greatest_sum: " << greatest_sum << "\n";
+    //   break;
+    // }
   }
 
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
-      }
-    }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
-  }
-
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
-
-  cout << max << "\n";
+  cout << greatest_sum << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  v.reserve(100000);
+  fastio();
 
-  solve();
+  int t;
+  cin >> t;
+
+  while (t--) { solve(); }
+  // solve();
 
   return 0;
 }

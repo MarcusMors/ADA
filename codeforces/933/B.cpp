@@ -38,91 +38,62 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
-
 void solve()
 {
   int n;
   cin >> n;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
+  vi v(n);
+  vi v_zeros;
 
-  int reduce = 0;
 
   rep(i, 0, n)
   {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
+    cin >> v[i];
+    if (v[i] == 0) { v_zeros.pb(i); }
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
+  if (v_zeros.empty()) {
+    // one whole island
+    //
+  } else if (v_zeros.size() == 1) {
+    // two islands
+    vi l_island(v.begin(), v.begin() + v_zeros[0]);
+    vi r_island(v.begin() + 1 + v_zeros[0], v.end());
+  } else {
+    vi l_island(v.begin(), v.begin() + v_zeros[0]);
+    vi r_island(v.begin() + v_zeros[0] + 1, v.end());
 
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
+    for (size_t i = 1; i < v_zeros.size() - 1; i++) {
+      vi island(v.begin() + v_zeros[i] + 1, v.begin() + v_zeros[i + 1]);
+      for (auto it = island.begin(); it < island.end(); it++) {
+        if (*(it + 1) < 2 * *(it)) {
+          continue;
+        } else {// not possible here
+          //
+        }
+      }
+      for (auto it = island.rbegin(); it < island.rend(); it++) {
+        if (*(it + 1) < 2 * *(it)) {
+          continue;
+        } else {// not possible here
+        }
       }
     }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
-  }
 
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
+    //
   }
-
-  cout << max << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
-  solve();
+  int t;
+  cin >> t;
+
+  while (t--) { solve(); }
+  // solve();
 
   return 0;
 }

@@ -5,8 +5,6 @@
 #include <sstream>
 #include <string>
 
-// using namespace std;
-
 template<typename T> T bit_number(unsigned Bytes)
 {
   // static_assert(sizeof(T) < Bytes, "the type isn't able to hold that much Bytes");
@@ -31,8 +29,6 @@ template<typename T> std::string to_str(const T &number)
   return str;
 }
 
-// #define int
-
 void print_random_data()
 {
   using Seed = std::random_device;
@@ -40,38 +36,42 @@ void print_random_data()
   // supported int Types // check https://en.cppreference.com/w/cpp/header/random
   // short, int, long, long long,
   // unsigned short, unsigned int, unsigned long, or unsigned long long
-  using int_t = int;
-  using cint_t = const int_t;
-  using Distribution = std::uniform_int_distribution<int_t>;
+  using intType = unsigned;
+  using Distribution = std::uniform_int_distribution<intType>;
 
   Seed seed;
   Engine engine{ seed() };
-  /**
-   * k_max = 10'000
-   * n_max = 3;
-   */
 
-  cint_t n_max = 3;
-  cint_t n_min = 1;
+  // const intType n_max = 100'000;
+  // const intType t_max = 100;
+  // const intType t_min = 1;
+
+  // const intType t_max = 3;
+  // const intType t_min = 1;
+  // Distribution t_distribution(t_min, t_max);
+
+  const intType n_max = 6;
+  const intType n_min = 3;
   Distribution n_distribution(n_min, n_max);
-  auto gen_n = [&]() { return n_distribution(engine); };
 
-  cint_t xp_max = 9;
-  cint_t xp_min = 1;
-  Distribution xp_distribution(xp_min, xp_max);
-  auto gen_xp = [&]() { return xp_distribution(engine); };
-  cint_t y_max = 9;
-  cint_t y_min = 0;
-  Distribution y_distribution(y_min, y_max);
-  auto gen_y = [&]() { return y_distribution(engine); };
+  // auto generate_t = [&]() { return t_distribution(engine); };
+  auto generate_n = [&]() { return n_distribution(engine); };
 
   using std::cout;
   using std::endl;
 
-  cint_t data_size = gen_n();
-  cout << data_size << "\n";
-  for (int_t i = 0; i < data_size; i++) { cout << gen_xp() << " " << gen_y() << " " << gen_xp() << "\n"; }
+  int n = generate_n();
+  int m = generate_n();
+  int k = generate_n();
+
+  cout << 1 << endl;
+  cout << n << " " << m << " " << k << endl;
+  for (intType i = 0; i < n; i++) { cout << generate_n() << ' '; }
   cout << "\n";
+  for (intType i = 0; i < m; i++) { cout << generate_n() << ' '; }
+  cout << "\n";
+  cout << endl;
+  // out.close();
 }
 
 int main()

@@ -1,3 +1,6 @@
+
+// https://atcoder.jp/contests/abc295/tasks/abc295_d?lang=en
+
 #include <bits/stdc++.h>
 #define fastio()                         \
   std::ios_base::sync_with_stdio(false); \
@@ -19,6 +22,8 @@
 #define pb push_back
 #define all(x) (x).begin(), (x).end()
 // #define type typename
+// 214'748'364'8
+// 100'000
 
 using namespace std;
 using ui = unsigned;
@@ -38,89 +43,53 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
-
 void solve()
 {
-  int n;
-  cin >> n;
+  string num;
+  cin >> num;
+  int sz = num.size();
+  // vector<vi> DP(9, vi(sz + 1));
+  //                         0123456789
+  // vector<string> DP(sz + 1, "0000000000");
 
-  vector<pair<int, ii>> bears;// x, {y,p}
+  map<string, ii> m;
+  // map<string, vi> m;
+  // map<string, map<int,int> > m;
+  string state = "0000000000";
+  // m[state].push_back(0);
+  m[state].first++;
 
-  int reduce = 0;
-
-  rep(i, 0, n)
-  {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
-  }
-
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
-      }
-    }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
-  }
-
-  int max = 0;
+  int c = 0;
   for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
+
+    int e = num[i] - '0';
+    if (state[e] == '1') {
+      state[e] = '0';
+    } else {
+      state[e] = '1';
+    }
+    // search previous indexes
+    // for (auto &&e : m[state]) {
+    //   if ((i + 1 - e) % 2 == 0) { c++; }
+    // }
+
+    if ((i + 1) % 2 == 0) {
+      c += m[state].first;
+      m[state].first++;
+    } else {
+      c += m[state].second;
+      m[state].second++;
+    }
+
+    // m[state].push_back(i + 1);
   }
 
-  cout << max << "\n";
+  cout << c << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
   solve();
 

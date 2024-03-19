@@ -13,7 +13,7 @@
 // __builtin_popcount(x) // returns number of 1-bits of x. x is unsigned int
 // __builtin_popcount(14) = 3// because 14: "1110", has three 1-bits.
 
-// #define int long long
+#define int long long
 #define rep(i, begin, end) \
   for (__typeof(end) i = (begin) - ((begin) > (end)); i != (end) - ((begin) > (end)); i += 1 - 2 * ((begin) > (end)))
 #define pb push_back
@@ -38,89 +38,59 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
+const int mod = 1'000'000'007;
+
+int m{};
+int p{};
+int t = 0;
+
+int D(int i)
+{
+  if (i == 1) {
+    t = (t + m) % mod;
+    return m;
+  } else if (i % 2 == 0) {
+
+    int a = (p * D(i / 2)) % mod;
+    t = (t + a) % mod;
+    return a;
+  } else {
+
+    int a = (D(i - 1) + 1) % mod;
+    t = (t + a) % mod;
+    return a;
+  }
+}
 
 void solve()
 {
+  t = 0;
   int n;
   cin >> n;
+  cin >> m;
+  cin >> p;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
-
-  int reduce = 0;
-
-  rep(i, 0, n)
-  {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
+  for (int i = 1; i < 10; i++) {
+    // n m p
+    // 6 1 3
+    t = 0;
+    int a = D(i);
+    // t += a;
+    cout << "D" << i << " :" << a << "\tt: " << t << "\n";
   }
 
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
-      }
-    }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
-  }
-
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
-
-  cout << max << "\n";
+  // int a = D(n);
+  // t = (t + a) % mod;
+  // if (a % 2 == t % 2) {
+  //   cout << "Perfecto :)";
+  // } else {
+  //   cout << "Imposible :(";
+  // }
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
   solve();
 

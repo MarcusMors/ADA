@@ -38,89 +38,45 @@ template<class T> std::ostream &operator<<(ostream &os, vector<T> v)
   return os;
 }
 
-// 4'294'967'296
-const int INF = 1'000'000'000;
-
 void solve()
 {
   int n;
   cin >> n;
+  int m;
+  cin >> m;
 
-  vector<pair<int, ii>> bears;// x, {y,p}
+  vi v(n);
+  rep(i, 0, n) { cin >> v[i]; }
 
-  int reduce = 0;
+  const int INF = 1'000'000;
+  int min = INF;
+  vi nums{ 1, 2, 3 };
 
-  rep(i, 0, n)
-  {
-    int x;
-    cin >> x;
-    int y;
-    cin >> y;
-    int p;
-    cin >> p;
-    if (abs(y) > x) {
-      reduce++;
-      continue;
-    }
-
-    bears.push_back({ x, { y, p } });
-  }
-
-  int sz = n - reduce;
-  sort(all(bears));
-
-  if (sz == 0) {
-    cout << 0 << endl;
-    return;
-  }
-
-  vector<pair<int, ii>> DP(sz);
-  // DP[0] = bears[0].second.second;
-  {
-    auto [x, yp] = bears[0];
-    auto [y, p] = yp;
-    DP[0] = { p, { x, y } };
-  }
-
-  for (int i = 1; i < sz; i++) {
-    auto [xi, ypi] = bears[i];
-    auto [yi, pi] = ypi;
-
-    int max = 0;
-    ii max_xy{ 0, 0 };
-    for (int j = 0; j < i; j++) {
-      auto [pj, xyj] = DP[j];
-      auto [xj, yj] = xyj;
-
-      const bool possible = (xi - xj) >= abs(yi - yj);
-      if (possible and pj > max) {
-        max = pj;
-        max_xy = { xj, yj };
+  for (int t = 0; t < 3; t++) {
+    int i = t;
+    while (i < n) {
+      int it = 0;
+      int count = 0;
+      int j = i;
+      int total = 0;
+      for (; i < n and i < j + m; i++) {
+        if (v[i] == nums[it]) { count++; }
+        it++;
+        if (it == 3) { it = 0; }
+        total++;
+      }
+      if (total == m) {
+        if ((m - count) < min) { min = (m - count); }
       }
     }
-    // DP[i] = max + pi;
-    DP[i] = { max + pi, { xi, yi } };
   }
 
-  int max = 0;
-  for (int i = 0; i < sz; i++) {
-    auto [p, xy] = DP[i];
-    if (p > max) { max = p; }
-  }
-
-  cout << max << "\n";
+  cout << min << "\n";
 }
-
-/*
-3
-2 7 8
-8 7 2
-7 5 5
- */
 
 signed main()
 {
-  // fastio();
+  fastio();
 
   solve();
 
